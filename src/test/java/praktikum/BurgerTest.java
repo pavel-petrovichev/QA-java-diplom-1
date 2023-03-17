@@ -3,6 +3,7 @@ package praktikum;
 import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,9 +18,9 @@ public class BurgerTest {
 
     @Test
     public void price() {
-        burger.setBuns(new Bun("white bun", 50.0f));
-        burger.addIngredient(new Ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
-        burger.addIngredient(new Ingredient(IngredientType.FILLING, "sausage", 75f));
+        burger.setBuns(bun("white bun", 50.0f));
+        burger.addIngredient(ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
+        burger.addIngredient(ingredient(IngredientType.FILLING, "sausage", 75f));
 
         float price = burger.getPrice();
 
@@ -28,9 +29,9 @@ public class BurgerTest {
 
     @Test
     public void receipt() {
-        burger.setBuns(new Bun("white bun", 50.0f));
-        burger.addIngredient(new Ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
-        burger.addIngredient(new Ingredient(IngredientType.FILLING, "sausage", 75f));
+        burger.setBuns(bun("white bun", 50.0f));
+        burger.addIngredient(ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
+        burger.addIngredient(ingredient(IngredientType.FILLING, "sausage", 75f));
 
         assertThat(burger.getReceipt()).isEqualTo("" +
                 "(==== white bun ====)\r\n" +
@@ -43,9 +44,9 @@ public class BurgerTest {
 
     @Test
     public void moveIngredient() {
-        burger.setBuns(new Bun("white bun", 50.0f));
-        burger.addIngredient(new Ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
-        burger.addIngredient(new Ingredient(IngredientType.FILLING, "sausage", 75f));
+        burger.setBuns(bun("white bun", 50.0f));
+        burger.addIngredient(ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
+        burger.addIngredient(ingredient(IngredientType.FILLING, "sausage", 75f));
 
         burger.moveIngredient(0, 1);
 
@@ -60,9 +61,9 @@ public class BurgerTest {
 
     @Test
     public void removeIngredient() {
-        burger.setBuns(new Bun("white bun", 50.0f));
-        burger.addIngredient(new Ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
-        burger.addIngredient(new Ingredient(IngredientType.FILLING, "sausage", 75f));
+        burger.setBuns(bun("white bun", 50.0f));
+        burger.addIngredient(ingredient(IngredientType.SAUCE, "hot sauce", 5.0f));
+        burger.addIngredient(ingredient(IngredientType.FILLING, "sausage", 75f));
 
         burger.removeIngredient(0);
 
@@ -72,5 +73,20 @@ public class BurgerTest {
                 "(==== white bun ====)\r\n" +
                 "\r\n" +
                 "Price: 175,000000\r\n");
+    }
+
+    private Bun bun(String name, float price) {
+        Bun bun = Mockito.mock(Bun.class);
+        Mockito.when(bun.getName()).thenReturn(name);
+        Mockito.when(bun.getPrice()).thenReturn(price);
+        return bun;
+    }
+
+    private Ingredient ingredient(IngredientType ingredientType, String name, float price) {
+        Ingredient ingredient = Mockito.mock(Ingredient.class);
+        Mockito.when(ingredient.getType()).thenReturn(ingredientType);
+        Mockito.when(ingredient.getName()).thenReturn(name);
+        Mockito.when(ingredient.getPrice()).thenReturn(price);
+        return ingredient;
     }
 }
